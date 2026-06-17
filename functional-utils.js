@@ -1,41 +1,62 @@
-// --- 1.4 Funciones de filtrado y transformación ---
-const obtenerIngresos = valores => valores.filter(valor => valor > 0);
-const obtenerGastos = valores => valores.filter(valor => valor < 0);
-const montosAbsolutos = valores => valores.map(valor => Math.abs(valor));
-const buscarPrimerGastoMayor = (valores, monto) => valores.find(valor => valor < -monto);
+// --- Funciones de filtrado y transformación ---
+const obtenerIngresos = movimientos => 
+  movimientos.filter(movimiento => movimiento.tipo === 'ingreso');
 
-// --- 2.2 Funciones con reduce ---
-const calcularSaldo = valores => valores.reduce((acc, val) => acc + val, 0);
-const totalIngresos = valores => obtenerIngresos(valores).reduce((acc, val) => acc + val, 0);
-const totalGastos = valores => obtenerGastos(valores).reduce((acc, val) => acc + val, 0);
+const obtenerGastos = movimientos => 
+  movimientos.filter(movimiento => movimiento.tipo === 'gasto');
 
-// --- 2.4 Reporte ---
-const generarValoresReporte = valores => [
-  valores.length,
-  totalIngresos(valores),
-  totalGastos(valores),
-  calcularSaldo(valores)
+// --- Funciones con reduce ---
+const totalIngresos = movimientos => 
+  obtenerIngresos(movimientos).reduce((acc, mov) => acc + mov.valor, 0);
+
+const totalGastos = movimientos => 
+  obtenerGastos(movimientos).reduce((acc, mov) => acc + mov.valor, 0);
+
+// CAMBIO CLAVE: El saldo ahora es ingresos MENOS gastos (valores positivos)
+const calcularSaldo = movimientos => 
+  totalIngresos(movimientos) - totalGastos(movimientos);
+
+// El signo se invierte: buscamos dónde el valor positivo supera al monto límite
+const buscarPrimerGastoMayor = (movimientos, monto) => 
+  obtenerGastos(movimientos).find(movimiento => movimiento.valor > monto);
+
+// --- Reporte ---
+const generarValoresReporte = movimientos => [
+  movimientos.length,
+  totalIngresos(movimientos),
+  totalGastos(movimientos),
+  calcularSaldo(movimientos)
 ];
 
-const imprimirReporte = (nombres, valores) => {
+const imprimirReporte = movimientos => {
   console.log('--- Resumen Final ---');
-  valores.forEach((valor, i) => {
-    const tipo = valor > 0 ? 'ingreso' : 'gasto';
-    console.log(`  ${i + 1}. ${nombres[i]} (${tipo}): $${Math.abs(valor).toFixed(2)}`);
+  movimientos.forEach((movimiento, i) => {
+    // Si ya implementaste la Parte 2 (POO), puedes cambiar esta línea por movimiento.datosMovimiento()
+    // Por ahora lee el objeto plano directamente:
+    const formato = movimiento.datosMovimiento 
+      ? movimiento.datosMovimiento() 
+      : `${movimiento.nombre} (${movimiento.tipo}): $${movimiento.valor.toFixed(2)}`;
+    
+    console.log(`  ${i + 1}. ${formato}`);
   });
   
-  const [cantidad, tIngresos, tGastos, saldo] = generarValoresReporte(valores);
+  const [cantidad, tIngresos, tGastos, saldo] = generarValoresReporte(movimientos);
   console.log('Total movimientos:', cantidad);
   console.log('Total ingresos: $' + tIngresos.toFixed(2));
-  console.log('Total gastos: $' + Math.abs(tGastos).toFixed(2));
+  console.log('Total gastos: $' + tGastos.toFixed(2)); // Ya es positivo, sin Math.abs
   console.log('Saldo: $' + saldo.toFixed(2));
 };
 
-// --- 3.1 & 3.2 Composición y DRY ---
-const promedioIngresos = valores => {
-  const ingresos = obtenerIngresos(valores);
-  return ingresos.length === 0 ? 0 : totalIngresos(valores) / ingresos.length;
+// --- Composición y DRY ---
+const promedioIngresos = movimientos => {
+  const ingresos = obtenerIngresos(movimientos);
+  return ingresos.length === 0 ? 0 : totalIngresos(movimientos) / ingresos.length;
 };
 
-// --- Reto autónomo: validarPresupuesto ---
-const validarPresupuesto = (valores, limite) => Math.abs(totalGastos(valores)) <= limite;
+// --- Reto autónomo Parte 1: agruparPorTipo ---
+const agruparPorTipo = movimientos => 
+  movimientos.reduce((acc, mov) => {
+    if (mov.tipo === 'ingreso') acc.ingresos.push(mov);
+    if (mov.tipo === 'gasto') acc.gastos.push(mov);
+    return acc;
+  }, { ingresos: [], gastos: [] });
