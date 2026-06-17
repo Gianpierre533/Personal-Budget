@@ -1,90 +1,86 @@
 // ==========================================
-// PARTE 2: Clase Movimiento
+// PARTE 2: Función Constructora Movimiento
 // ==========================================
-class Movimiento {
-  constructor(nombre, tipo, valor) {
-    this.nombre = nombre;
-    this.tipo = tipo;
-    this.valor = valor;
-    this.fecha = new Date(); // Guarda la fecha actual
-  }
+function Movimiento(nombre, tipo, valor) {
+  this.nombre = nombre;
+  this.tipo = tipo;
+  this.valor = valor;
+  this.fecha = new Date();
 
-  esIngreso() {
+  this.esIngreso = function() {
     return this.tipo === 'ingreso';
-  }
+  };
 
-  esGasto() {
+  this.esGasto = function() {
     return this.tipo === 'gasto';
-  }
+  };
 
-  datosMovimiento() {
+  this.datosMovimiento = function() {
     const signo = this.esIngreso() ? '+' : '-';
     return `${this.nombre} (${this.tipo}): ${signo}$${this.valor.toFixed(2)}`;
-  }
+  };
 
-  // Reto autónomo Parte 2: antigüedad en días
-  antiguedadEnDias() {
+  // Reto autónomo Parte 2
+  this.antiguedadEnDias = function() {
     const hoy = new Date();
     const diferenciaMs = hoy - this.fecha;
     return Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
-  }
+  };
 }
 
 // ==========================================
-// PARTE 3: Clase Presupuesto (Encapsulación)
+// PARTE 3: Función Constructora Presupuesto
 // ==========================================
-class Presupuesto {
-  constructor() {
-    this.movimientos = []; 
-  }
+function Presupuesto() {
+  this.movimientos = [];
 
-  agregar(movimiento) {
+  this.agregar = function(movimiento) {
     this.movimientos.push(movimiento);
-  }
+  };
 
-  eliminar(nombre) {
+  this.eliminar = function(nombre) {
     this.movimientos = this.movimientos.filter(mov => mov.nombre !== nombre);
-  }
+  };
 
-  obtenerIngresos() {
+  this.obtenerIngresos = function() {
     return this.movimientos.filter(mov => mov.esIngreso());
-  }
+  };
 
-  obtenerGastos() {
+  this.obtenerGastos = function() {
     return this.movimientos.filter(mov => mov.esGasto());
-  }
+  };
 
-  totalIngresos() {
+  this.totalIngresos = function() {
     return this.obtenerIngresos().reduce((acc, mov) => acc + mov.valor, 0);
-  }
+  };
 
-  totalGastos() {
+  this.totalGastos = function() {
     return this.obtenerGastos().reduce((acc, mov) => acc + mov.valor, 0);
-  }
+  };
 
-  saldo() {
+  this.saldo = function() {
     return this.totalIngresos() - this.totalGastos();
-  }
+  };
 
-  buscarPorNombre(texto) {
+  this.buscarPorNombre = function(texto) {
     return this.movimientos.find(mov => 
       mov.nombre.toLowerCase().includes(texto.toLowerCase())
     );
-  }
+  };
 
-  resumen() {
+  this.resumen = function() {
     return {
       cantidad: this.movimientos.length,
       ingresos: this.totalIngresos(),
       gastos: this.totalGastos(),
       saldo: this.saldo()
     };
-  }
+  };
 
-  // Reto autónomo Parte 3: topGastos(n)
-  topGastos(n) {
+  // Reto autónomo Parte 3
+  this.topGastos = function(n) {
     return this.obtenerGastos()
-      .sort((a, b) => b.valor - a.valor) // Orden descendente (mayor a menor)
-      .slice(0, n);                     // Toma los primeros 'n' elementos
-  }
+      .sort((a, b) => b.valor - a.valor)
+      .slice(0, n);
+  };
 }
