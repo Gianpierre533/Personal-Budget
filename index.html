@@ -1,15 +1,92 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestor de Presupuesto Personal</title>
+    <title>Gestor de Presupuesto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <h1>Gestor de Presupuesto Personal</h1>
-    <p>Abre la consola del navegador (F12 → Console) para interactuar.</p>
+  <body class="min-h-screen bg-gray-50">
+    <main class="max-w-4xl mx-auto px-4 py-8">
+      <header class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">
+          💰 Gestor de Presupuesto
+        </h1>
+        <p class="text-gray-500">Tu dinero, bajo control.</p>
+      </header>
+
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-6 bg-white rounded-xl shadow">
+          <h2
+            class="text-sm font-semibold text-gray-500 uppercase tracking-wide"
+          >
+            Saldo total
+          </h2>
+          <p id="saldo" class="mt-1 text-4xl font-bold text-gray-800">
+            $3454.50
+          </p>
+          <div class="flex gap-4 mt-4">
+            <div class="flex-1 p-3 bg-green-50 rounded-lg">
+              <p class="text-xs text-green-700">Ingresos</p>
+              <p
+                id="total-ingresos"
+                class="text-lg font-semibold text-green-700"
+              >
+                $3500.00
+              </p>
+            </div>
+            <div class="flex-1 p-3 bg-red-50 rounded-lg">
+              <p class="text-xs text-red-700">Gastos</p>
+              <p id="total-gastos" class="text-lg font-semibold text-red-700">
+                $45.50
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 bg-white rounded-xl shadow">
+          <h2 class="mb-4 text-lg font-semibold text-gray-800">
+            Agregar movimiento
+          </h2>
+          <form id="form-mov" class="space-y-3">
+            <input
+              id="nombre"
+              type="text"
+              placeholder="Nombre"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <select
+              id="tipo"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="ingreso">Ingreso</option>
+              <option value="gasto">Gasto</option>
+            </select>
+
+            <input
+              id="monto"
+              type="number"
+              placeholder="Monto"
+              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <button
+              type="submit"
+              class="w-full p-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+            >
+              Agregar
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section class="mt-6 p-6 bg-white rounded-xl shadow">
+        <h2 class="mb-4 text-lg font-semibold text-gray-800">Movimientos</h2>
+        <ul id="lista" class="space-y-2"></ul>
+      </section>
+    </main>
+
     <script src="oop-objects.js"></script>
-    <script src="functional-utils.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
